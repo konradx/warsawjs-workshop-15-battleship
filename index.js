@@ -66,11 +66,12 @@ class BaseElement {
 }
 
 class Cell extends BaseElement {
-  constructor({isShip, location}){
+  constructor({isShip, location, gameboard}){
     super();
     this.isShip = isShip;
     this.state = 'unknown';
     this.location = location;
+    this.gameboard = gameboard;
     this.onClick = this.fireTorpedo;
   }
   createElement(){
@@ -78,9 +79,7 @@ class Cell extends BaseElement {
     element.addEventListener('click', this.onClick.bind(this) );
     return element;
   }
-  getElement(){
 
-  }
   setState(state){
     this.state = state;
     this.refresh();
@@ -92,6 +91,11 @@ class Cell extends BaseElement {
   }
   fireTorpedo(){
     if (this.isShip){
+      this.gameboard.score += 1;
+      while (gameResult.firstChild) {
+        gameResult.removeChild(gameResult.firstChild);
+      }
+      gameResult.append(`${this.gameboard.score}//${this.gameboard.totalScore}`);
       this.setState('hit');
     } else {
       this.setState('miss');
@@ -117,10 +121,12 @@ class GameBoard extends BaseElement {
       for (let colIndex = 0; colIndex < this.colNumber; colIndex++) {
         this.cells.push(new Cell({
           isShip: this.fleet.array[rowIndex][colIndex] === 1,
-          location: [rowIndex, colIndex]
+          location: [rowIndex, colIndex],
+          gameboard: this
         }));
       }
     }
+    gameResult.append(`${this.score}/${this.totalScore}`);
   }
 
   createElement(){
@@ -130,12 +136,9 @@ class GameBoard extends BaseElement {
     for (let rowIndex = 0; rowIndex < this.rowNumber; rowIndex++) {
       const row = document.createElement('div');
       row.className = 'board-row';
-      console.log(row)
       for (let colIndex = 0; colIndex < this.colNumber; colIndex++) {
         const cell = this.cells[rowIndex * this.colNumber + colIndex];
           row.appendChild(cell.setElement());
-        console.log(cell);
-        console.log('test');
         }
         gameboard.appendChild(row);
       }
