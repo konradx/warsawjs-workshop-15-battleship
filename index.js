@@ -50,19 +50,18 @@ class BaseElement {
 
   }
   getElement(){
-
-  }
-  setState(state){
-
-  }
-  refresh(){
-
-  }
-  fireTorpedo(){
+    return this.elementState.element;
 
   }
   initialize(){
 
+  }
+  setElement(){
+    this.elementState = {
+      element: this.createElement()
+    };
+    this.initialize();
+    return this.getElement();
   }
 }
 
@@ -88,7 +87,7 @@ class Cell extends BaseElement {
   }
   refresh(){
 //    this.getElement().classname = 'cell-' + this.state;
-    this.getElement().classname = `cell-${this.state}`;
+    this.getElement().className = `cell-${this.state}`;
 
   }
   fireTorpedo(){
@@ -109,24 +108,40 @@ class GameBoard extends BaseElement {
   constructor({ size }){
     super();
     this.cells = [];
-    this.rowNuber = size;
+    this.rowNumber = size;
     this.colNumber = size;
     this.fleet = gameboardArray[Math.floor(Math.random() * gameboardArray.length)];
     this.score = 0;
-    this.totalScore = this.getTotalScore(fleet);
-    for (let rowIndex = 0; rowInex < this.rowNumber; rowIndex++) {
+    this.totalScore = this.getTotalScore(this.fleet);
+    for (let rowIndex = 0; rowIndex < this.rowNumber; rowIndex++) {
       for (let colIndex = 0; colIndex < this.colNumber; colIndex++) {
         this.cells.push(new Cell({
           isShip: this.fleet.array[rowIndex][colIndex] === 1,
           location: [rowIndex, colIndex]
-        });
+        }));
       }
     }
   }
 
   createElement(){
     const gameboard = document.createElement('div');
-  }
+    gameboard.className = 'gameboard';
+
+    for (let rowIndex = 0; rowIndex < this.rowNumber; rowIndex++) {
+      const row = document.createElement('div');
+      row.className = 'board-row';
+      console.log(row)
+      for (let colIndex = 0; colIndex < this.colNumber; colIndex++) {
+        const cell = this.cells[rowIndex * this.colNumber + colIndex];
+          row.appendChild(cell.setElement());
+        console.log(cell);
+        console.log('test');
+        }
+        gameboard.appendChild(row);
+      }
+  return gameboard;
+}
+
   getTotalScore(fleet){
     let total = 0;
     //fleet.array.forEach(function(row) {});
@@ -137,3 +152,8 @@ class GameBoard extends BaseElement {
   }
 
 }
+
+const gameboardContainer = document.getElementById('gameboardContainer');
+const gameResult = document.getElementById('gameResult');
+const gameboard = new GameBoard({ size: 10});
+gameboardContainer.appendChild(gameboard.setElement());
