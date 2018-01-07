@@ -1,7 +1,7 @@
 'use strict';
 const gameboardArray = [
   {
-    name: 'gameboard 1',
+    name: 'Gameboard 1',
     array: [
       [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,4 +43,23 @@ const gameboardArray = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
   }
-]
+];
+
+class BaseElement {
+  createElement(){
+
+  }
+  getElement(){
+
+  }
+  initialize(){
+
+  }
+}
+
+class Cell extend BaseElement {
+
+}
+class Board extend BaseElement {
+
+}
